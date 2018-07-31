@@ -125,7 +125,7 @@
     }
   },
   "variables": {
-    "storageAccountName": "storagefabricio",
+    "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'storage')]",
     "vmStorageAccountContainerName": "vhd",
     "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]",
     "computerNamePrefix": "sparknode",
@@ -154,6 +154,15 @@
   },
   "resources": [
     {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('storageAccountName')]",
+      "apiVersion": "2015-05-01-preview",
+      "location": "[parameters('location')]",
+      "properties": {
+        "accountType": "Standard_LRS"
+      }
+    },
+    {
       "name": "shared-resources",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
@@ -164,9 +173,6 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "storageAccountName": {
-            "value": "[variables('storageAccountName')]"
-          },
           "virtualNetworkName": {
             "value": "[parameters('virtualNetworkName')]"
           },
@@ -187,7 +193,8 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'shared-resources')]"
+        "[concat('Microsoft.Resources/deployments/', 'shared-resources')]",
+        "[variables('storageAccountName')]"
       ],
       "properties": {
         "mode": "Incremental",
