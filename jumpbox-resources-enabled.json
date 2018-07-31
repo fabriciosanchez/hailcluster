@@ -18,7 +18,7 @@
     },
     "storageAccountName": {
       "type": "string",
-      "defaultValue": "[concat(uniquestring(resourceGroup().id), 'storage')]",
+      "defaultValue": "storagefabricio",
       "metadata": {
         "Description": "Unique namespace for the Storage Account where the Virtual Machine's disks will be placed"
       }
