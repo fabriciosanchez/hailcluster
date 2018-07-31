@@ -4,7 +4,7 @@
   "parameters": {
     "storageAccountName": {
       "type": "string",
-      "defaultValue": "[concat(uniquestring(resourceGroup().id),'storage')]",
+      "defaultValue": "[concat(uniquestring(resourceGroup().id), 'storage')]",
       "metadata": {
         "Description": "Unique namespace for the Storage Account where the Virtual Machine's disks will be placed"
       }

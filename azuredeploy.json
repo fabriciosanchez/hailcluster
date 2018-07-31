@@ -125,11 +125,11 @@
     }
   },
   "variables": {
-    "storageAccountName": "[concat(uniquestring(resourceGroup().id),'storage')]",
+    "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'storage')]",
     "vmStorageAccountContainerName": "vhd",
     "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]",
     "computerNamePrefix": "sparknode",
-    "scriptUrl": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/spark-on-ubuntu/",
+    "scriptUrl": "https://raw.githubusercontent.com/fabriciosanchez/hailcluster/master/",
     "templateUrl": "[variables('scriptUrl')]",
     "sharedTemplateName": "shared-resources",
     "jumpboxTemplateName": "jumpbox-resources-",
@@ -309,7 +309,7 @@
           "osDisk": {
             "name": "osdisk",
             "vhd": {
-              "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), '2016-01-01').primaryEndpoints.blob,variables('vmStorageAccountContainerName'),'/','osdisk', copyindex() ,'.vhd')]"
+              "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), '2016-01-01').primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/','osdisk', copyindex() ,'.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -318,7 +318,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('nic', copyindex()))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat('nic', copyindex()))]"
             }
           ]
         }
@@ -363,7 +363,7 @@
           "osDisk": {
             "name": "osdisksl",
             "vhd": {
-              "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), '2016-01-01').primaryEndpoints.blob,variables('vmStorageAccountContainerName'),'/','osdisksl', copyindex() ,'.vhd')]"
+              "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), '2016-01-01').primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/','osdisksl', copyindex() ,'.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -372,17 +372,14 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('nicsl', copyindex()))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat('nicsl', copyindex()))]"
             }
           ]
         }
       }
     },
     {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat('mastervm', copyindex(), '/installsparkmaster')]",
       "apiVersion": "2015-05-01-preview",
-      "location": "[parameters('location')]",
       "copy": {
         "name": "virtualMachineExtensionsLoopMaster",
         "count": "[variables('numberOfMasterInstances')]"
@@ -391,6 +388,8 @@
         "[concat('Microsoft.Compute/virtualMachines/', 'mastervm', copyindex())]",
         "[concat('Microsoft.Network/networkInterfaces/', 'nic', copyindex())]"
       ],
+      "location": "[parameters('location')]",
+      "name": "[concat('mastervm', copyindex(), '/installsparkmaster')]",
       "properties": {
         "publisher": "Microsoft.Azure.Extensions",
         "type": "CustomScript",
@@ -400,9 +399,10 @@
           "fileUris": [
             "[concat(variables('scriptUrl'), 'spark-cluster-install.sh')]"
           ],
-          "commandToExecute": "[concat('bash spark-cluster-install.sh -k ',parameters('sparkVersion'),' -d ', reference('nic0').ipConfigurations[0].properties.privateIPAddress,' -s ',variables('numberOfSlavesInstances'),' -m ', ' 1 ')]"
+          "commandToExecute": "[concat('bash spark-cluster-install.sh -k ', parameters('sparkVersion'),' -d ', reference('nic0').ipConfigurations[0].properties.privateIPAddress,' -s ',variables('numberOfSlavesInstances'),' -m ', ' 1 ')]"
         }
-      }
+      },
+      "type": "Microsoft.Compute/virtualMachines/extensions"
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
