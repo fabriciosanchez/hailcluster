@@ -109,7 +109,6 @@ install_spark()
 ##########
 
 	version=${SPK_VERSION}
-	#wget http://mirror.tcpdiag.net/apache/spark/spark-${version}/spark-${version}-bin-hadoop1.tgz  
 	wget https://archive.apache.org/dist/spark/spark-${version}/spark-${version}-bin-hadoop2.7.tgz
 	echo "Unpacking Spark"
 	tar xvzf spark-*.tgz > /tmp/spark-ec2_spark.log
@@ -134,7 +133,7 @@ install_spark()
 	
 #	Setting passwordless ssh for root 
 
-        rm -f ~/.ssh/id_rsa 
+    rm -f ~/.ssh/id_rsa 
 	ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa && cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 
 #	Fourth setup some Apache Spark working directories with proper user permissions
@@ -143,7 +142,7 @@ install_spark()
 	sudo chown -R spark:spark /srv/spark
 	sudo chmod 4755 /srv/spark/tmp
 
-#	Fifth let�s do a quick test
+#	Fifth let's do a quick test
 #	cd /usr/local/spark	 
 #	bin/run-example SparkPi 10
 
