@@ -13,7 +13,7 @@ help()
 log()
 {
 	# If you want to enable this logging add a un-comment the line below and add your account key 
-    	#curl -X POST -H "content-type:text/plain" --data-binary "$(date) | ${HOSTNAME} | $1" https://logs-01.loggly.com/inputs/[account-key]/tag/redis-extension,${HOSTNAME}
+    #curl -X POST -H "content-type:text/plain" --data-binary "$(date) | ${HOSTNAME} | $1" https://logs-01.loggly.com/inputs/[account-key]/tag/redis-extension,${HOSTNAME}
 	echo "$1"
 }
 
@@ -109,7 +109,8 @@ install_spark()
 ##########
 
 	version=${SPK_VERSION}
-	wget http://mirror.tcpdiag.net/apache/spark/spark-${version}/spark-${version}-bin-hadoop1.tgz  
+	#wget http://mirror.tcpdiag.net/apache/spark/spark-${version}/spark-${version}-bin-hadoop1.tgz  
+	wget https://archive.apache.org/dist/spark/spark-${version}/spark-${version}-bin-hadoop2.7.tgz
 	echo "Unpacking Spark"
 	tar xvzf spark-*.tgz > /tmp/spark-ec2_spark.log
 	rm spark-*.tgz
