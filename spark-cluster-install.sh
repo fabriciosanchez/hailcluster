@@ -114,10 +114,10 @@ install_spark()
 	echo "Unpacking Spark"
 	tar xvzf spark-*.tgz > /tmp/spark-ec2_spark.log
 	rm spark-*.tgz
-	mv spark-${version}-bin-hadoop1 ../
+	mv spark-${version}-bin-hadoop2.7 ../
 	cd ..
 	cd /usr/local/
-	sudo ln -s spark-${version}-bin-hadoop1 spark
+	sudo ln -s spark-${version}-bin-hadoop2.7 spark
 
 #	Third create a spark user with proper privileges and ssh keys.
 
