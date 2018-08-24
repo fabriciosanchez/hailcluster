@@ -3,7 +3,7 @@
 help()
 {
     #TODO: Add help text here
-    echo "This script installs spark cluster on Ubuntu"
+    echo "This script installs spark cluster and Hail on top of Ubuntu on Microsoft Azure"
     echo "Parameters:"
     echo "-k spark version like 2.2.0"
     echo "-m master 1 slave 0"
@@ -29,6 +29,7 @@ fi
 # TEMP FIX - Re-evaluate and remove when possible
 # This is an interim fix for hostname resolution in current VM
 grep -q "${HOSTNAME}" /etc/hosts
+
 if [ $? -eq $SUCCESS ];
 then
   echo "${HOSTNAME}found in /etc/hosts"
@@ -78,17 +79,33 @@ install_pre()
 # First install pre-requisites
 	sudo  apt-get -y update
 	 
-	echo "Installing Java"
+	# Installing Java 8
 	add-apt-repository -y ppa:webupd8team/java
 	apt-get -y update 
 	echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
 	echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
-	apt-get -y install oracle-java7-installer
+	#apt-get -y install oracle-java7-installer
+	sudo apt-get -y install oracle-java8-installer
+	
+	# Installing ntp
 	sudo ntpdate pool.ntp.org
 	sudo apt-get -y install ntp
-	sudo apt-get -y install python-software-properties 
+	
+	# Installing python-software-properties
+	#sudo apt-get -y install python-software-properties 
+	sudo add-apt-repository -y ppa:deadsnakes/ppa
+	sudo apt-get update
+	sudo apt-get -y install python3.6
+
+	# Updating the environment
 	sudo apt-get -y update 
+
+	# Installing Git
 	sudo apt-get -y install git
+
+	# Installing Conda (Hail's requirement)
+	wget https://repo.anaconda.com/archive/Anaconda3-5.2.0-Linux-x86_64.sh -O ~/anaconda-install.sh
+	bash anaconda-install.sh -b -p
 }
 
 # Install spark
